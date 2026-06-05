@@ -1,0 +1,64 @@
+:root{
+    --BackgrounPrimary: #213235;
+    --BackgroundSecondary: #596d70;
+    --AccentColor: #e16720;
+    --TextColor: #f3f5f6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body{
+    background-color: var(--BackgrounPrimary);
+}
+
+h1{
+    font-family: 'Excon', sans-serif;
+    font-size: large;
+    font-weight: 400;
+    text-transform: uppercase;
+    color: var(--TextColor);
+    margin: 24px;
+}
+
+button{
+    font-family: "Author", sans-serif;
+    font-size: small;
+    background-color: var(--BackgroundSecondary);
+    color: var(--TextColor);
+    border-radius: 4px;
+    border: none;
+    padding: 4px 8px;
+    cursor: pointer;
+}
+
+header{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+nav{
+    display: flex;
+    justify-content: center;
+    padding: 24px;
+    gap: 16px;
+}
+
+/* main{
+} */
+
+section{
+    background-color: var(--BackgroundSecondary);
+    margin: 24px;
+    padding:  24px;
+    border-radius: 8px;
+    font-family: "Author", sans-serif;
+    font-size: medium;
+    color: var(--TextColor);
+}
+
+.hidden {
+    display: none;
+}
