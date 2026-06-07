@@ -1,39 +1,82 @@
-const buttons = document.querySelectorAll("nav button");
+// --- DOM references ---
+const navButtons = document.querySelectorAll("nav button");
 const sections = document.querySelectorAll("main section");
+const arrivalInput = document.querySelector("#arrival");
+const departureInput = document.querySelector("#departure");
+const totalButton = document.querySelector("#calculate");
+const daysBody = document.querySelector("#days-body");
+const weekOutput = document.querySelector("#week");
 
-buttons.forEach((button) => {
+// =========================================
+//  NAVIGATION
+// =========================================
+
+navButtons.forEach((button) => {
     button.addEventListener("click", () => {
-        //read target
         const show = button.dataset.target
         const targetSection = document.querySelector(`#${show}`);
-        // hide sections 
         sections.forEach((section) => {
             section.classList.add("hidden");
         });
-        //show the right section
         targetSection.classList.remove("hidden");
     });
 });
 
-const totalButton = document.querySelector("#calculate");
+// =========================================
+//  ATTENDANCE CALCULATOR
+// =========================================
+
+const days = [];
+
+function formatMinutes(minutes) {
+    const hour = Math.floor(minutes / 60);
+    const minute = minutes % 60;
+    const result = `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
+    return result;
+}
+
+function timeToMinute(value) {
+    const tab = value.split(":");
+    const hours = Number(tab[0]);
+    const minutes = Number(tab[1]);
+    const total = hours * 60 + minutes;
+    return total;
+}
+
+function renderTable() {
+    daysBody.innerHTML = "";
+    days.forEach((day) => {
+       daysBody.innerHTML += `<tr><td>${day.date}</td><td>${day.arrival}</td><td>${day.departure}</td><td>${day.total}</td></tr>`
+    });
+}
+
+function renderTotalDays() {
+    let totalMinute = 0
+    days.forEach((day) => {
+        totalMinute += day.minutes;
+    });
+    const weekResult = formatMinutes(totalMinute)
+    weekOutput.textContent = weekResult;
+}
 
 totalButton.addEventListener("click", () => {
-    //code calcul
-    const arrivalValue = document.querySelector("#arrival").value;
-    const arrivalTab = arrivalValue.split(":");
-    const arrivalHour = Number(arrivalTab[0]);
-    const arrivalMinute = Number(arrivalTab[1]);
-    const arrivalTotal = arrivalHour * 60 + arrivalMinute;
-    //faire la mm avec la valeur de départ
-    const departureValue = document.querySelector("#departure").value;
-    const departureTab = departureValue.split(":");
-    const departureHour = Number(departureTab[0]);
-    const departureMinute = Number(departureTab[1]);
-    const departureTotal = departureHour * 60 + departureMinute;
-    // soustraire les 2
+    const arrivalValue = arrivalInput.value;
+    const arrivalTotal = timeToMinute(arrivalValue);
+    const departureValue = departureInput.value;
+    const departureTotal = timeToMinute(departureValue);
     const timeTotal = departureTotal - arrivalTotal;
-    const timeHour = Math.floor(timeTotal / 60);
-    const timeMinute = timeTotal % 60;
-    const timeResult = `${String(timeHour).padStart(2, "0")}:${String(timeMinute).padStart(2, "0")}`;
-    document.querySelector("#result").textContent = timeResult;
+    const timeResult = formatMinutes(timeTotal);
+    const today = new Date();
+    const dateStr = today.toLocaleDateString("fr-FR");
+    const day = {
+        date: dateStr, 
+        arrival: arrivalValue,
+        departure: departureValue,
+        total: timeResult,
+        minutes: timeTotal,
+    }
+    days.push(day);
+    console.log(days);
+    renderTable();
+    renderTotalDays();
 });
